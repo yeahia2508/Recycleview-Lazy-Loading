@@ -116,8 +116,6 @@ public class MainActivity extends AppCompatActivity implements OnDataLoadListene
         
         final int curAdapterSize = mUserAdapter.getItemCount();
 
-            Log.i("arif","(" + (UPDATE_ITEM_COUNT * onScrollIndex) +"," + (onScrollIndex * UPDATE_ITEM_COUNT + UPDATE_ITEM_COUNT)+")");
-
         try {
 
             List<User> users;
@@ -132,13 +130,13 @@ public class MainActivity extends AppCompatActivity implements OnDataLoadListene
             }
 
             mUserSubList.addAll(users);
-            final int currentListSize = users.size();
+            final int currentUserSize = users.size();
 
             handler.post(new Runnable() {
                 @Override
                 public void run() {
                     if(mUserAdapter != null){
-                        mUserAdapter.notifyItemRangeInserted(curAdapterSize, currentListSize);
+                        mUserAdapter.notifyItemRangeInserted(curAdapterSize, currentUserSize);
                     }
                 }
             });

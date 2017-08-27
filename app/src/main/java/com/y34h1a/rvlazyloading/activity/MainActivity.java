@@ -112,10 +112,6 @@ public class MainActivity extends AppCompatActivity implements OnDataLoadListene
 
     private void addMoreData() {
 
-        //Number of Recycleview item will update during scroll
-        
-        final int curAdapterSize = mUserAdapter.getItemCount();
-
         try {
 
             List<User> users;
@@ -128,9 +124,10 @@ public class MainActivity extends AppCompatActivity implements OnDataLoadListene
                         subList(UPDATE_ITEM_COUNT * onScrollIndex,
                                 onScrollIndex * UPDATE_ITEM_COUNT + UPDATE_ITEM_COUNT);
             }
-
             mUserSubList.addAll(users);
+
             final int currentUserSize = users.size();
+            final int curAdapterSize = mUserAdapter.getItemCount();
 
             handler.post(new Runnable() {
                 @Override

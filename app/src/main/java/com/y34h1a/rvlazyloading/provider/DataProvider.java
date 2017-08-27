@@ -12,7 +12,7 @@ public class DataProvider {
 
     public void getData(){
         List<User> users = new ArrayList<>();
-        for (int i = 0; i < 30 ; i++){
+        for (int i = 0; i < 39 ; i++){
             User user = new User();
             user.setName("User " + (i+1));
             user.setEmail("yeahia.arif@gmail.com");

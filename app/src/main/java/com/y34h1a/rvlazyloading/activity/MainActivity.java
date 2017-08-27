@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.y34h1a.rvlazyloading.interfaces.OnDataLoadListener;
@@ -28,6 +29,8 @@ public class MainActivity extends AppCompatActivity implements OnDataLoadListene
 
     private int onScrollIndex = 0;
     private int mPrevTotalItemCount = 0;
+    private int mDifference = 0;
+    final int UPDATE_ITEM_COUNT = 6;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,14 +81,9 @@ public class MainActivity extends AppCompatActivity implements OnDataLoadListene
 
                 if(((firstVisibleItem + visibleItemCount) >= totalItemCount) && totalItemCount != mPrevTotalItemCount ){
                     mPrevTotalItemCount = totalItemCount;
-
-                    if (mUserAllList.size() > totalItemCount){
-                        addMoreData();
-                        Toast.makeText(MainActivity.this, "New Data Added", Toast.LENGTH_SHORT).show();
-                    }
+                    mDifference = mUserAllList.size() - totalItemCount;
+                    addMoreData();
                 }
-
-
             }
         });
     }
@@ -115,23 +113,32 @@ public class MainActivity extends AppCompatActivity implements OnDataLoadListene
     private void addMoreData() {
 
         //Number of Recycleview item will update during scroll
-        int UPDATE_ITEM_COUNT = 6;
         
         final int curAdapterSize = mUserAdapter.getItemCount();
 
-        try{
+            Log.i("arif","(" + (UPDATE_ITEM_COUNT * onScrollIndex) +"," + (onScrollIndex * UPDATE_ITEM_COUNT + UPDATE_ITEM_COUNT)+")");
 
-            final List<User> users = mUserAllList.
-                    subList(UPDATE_ITEM_COUNT * onScrollIndex,
-                            onScrollIndex * UPDATE_ITEM_COUNT + UPDATE_ITEM_COUNT);
+        try {
+
+            List<User> users;
+            if (mDifference !=0 && mDifference < UPDATE_ITEM_COUNT){
+                users = mUserAllList.
+                        subList(UPDATE_ITEM_COUNT * onScrollIndex,
+                                onScrollIndex * UPDATE_ITEM_COUNT + mDifference);
+            }else{
+                users = mUserAllList.
+                        subList(UPDATE_ITEM_COUNT * onScrollIndex,
+                                onScrollIndex * UPDATE_ITEM_COUNT + UPDATE_ITEM_COUNT);
+            }
 
             mUserSubList.addAll(users);
+            final int currentListSize = users.size();
 
             handler.post(new Runnable() {
                 @Override
                 public void run() {
                     if(mUserAdapter != null){
-                        mUserAdapter.notifyItemRangeInserted(curAdapterSize, users.size());
+                        mUserAdapter.notifyItemRangeInserted(curAdapterSize, currentListSize);
                     }
                 }
             });
@@ -141,6 +148,7 @@ public class MainActivity extends AppCompatActivity implements OnDataLoadListene
         }catch (IndexOutOfBoundsException e){
             e.printStackTrace();
         }
+
     }
 
     
